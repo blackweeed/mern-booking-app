@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   return (
@@ -9,6 +9,13 @@ const LoginPage = () => {
           <input type="email" placeholder="Email" />
           <input type="password" placeholder="Password" />
           <button className="primary">Log in</button>
+          <div className="text-center py-2 text-gray-500">
+            Don't have an account yet?{" "}
+            <Link to="/register" className="underline text-gray-700">
+              Register now
+            </Link>
+            `
+          </div>
         </form>
       </div>
     </div>
