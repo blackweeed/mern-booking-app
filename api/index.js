@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const User = require("./models/User");
 require("dotenv").config();
 const app = express();
 
@@ -11,7 +12,6 @@ app.use(
     origin: "http://127.0.0.1:5173",
   })
 );
-// Ed7ROlkhsS7lnt
 
 mongoose.connect(process.env.MONGO_URL);
 
@@ -21,6 +21,12 @@ app.get("/test", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
+  User.create({
+    name,
+    email,
+    password,
+  });
+
   res.json({ name, email, password });
 });
 
