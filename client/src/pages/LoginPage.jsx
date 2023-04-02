@@ -1,21 +1,31 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
+  const [redirect, setRedirect] = useState(false);
+  const { setUser } = useContext(UserContext);
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
     try {
-      await axios.post("/login", {
+      const response = await axios.post("/login", {
         email,
         password,
       });
+      setUser(response.data);
       alert("Login succesful");
+
+      setRedirect(true);
     } catch (err) {
       alert("Login failed");
     }
+  }
+  if (redirect) {
+    return <Navigate to={"/"} />;
   }
 
   return (
@@ -33,7 +43,7 @@ const LoginPage = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => e.target.value}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <button className="primary">Log in</button>
           <div className="text-center py-2 text-gray-500">
