@@ -2,7 +2,12 @@ import React from "react";
 
 const Perks = ({ selected, onChange }) => {
   function handleCbClick(e) {
-    console.log(e.target.selected);
+    const { checked, name } = e.target;
+    if (checked) {
+      onChange([...selected, name]);
+    } else {
+      onChange([...selected.filter((selectedName) => selectedName !== name)]);
+    }
   }
 
   return (
