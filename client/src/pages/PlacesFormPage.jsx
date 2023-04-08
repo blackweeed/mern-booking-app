@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Perks from "../Perks";
 import PhotosUploader from "../PhotosUploader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import axios from "axios";
 
 const PlacesFormPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
@@ -16,6 +17,24 @@ const PlacesFormPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
+  useEffect(() => {
+    if (!id) {
+      return;
+    } else {
+      axios.get("/places/" + id).then((response) => {
+        const { data } = response;
+        setTitle(data.title);
+        setAddress(data.address);
+        setAddedPhotos(data.photos);
+        setDescription(data.description);
+        setPerks(data.perks);
+        setExtraInfo(data.extraInfo);
+        setCheckIn(data.checkIn);
+        setCheckOut(data.checkOut);
+        setMaxGuests(data.maxGuests);
+      });
+    }
+  }, [id]);
 
   function inputHeader(text) {
     return <h2 className=" text-2xl mt-4">{text}</h2>;
@@ -31,10 +50,9 @@ const PlacesFormPage = () => {
       </>
     );
   }
-
-  async function addNewPlace(e) {
-    e.preventDefault();
-    const { data } = await axios.post("/places", {
+  savePlace;
+  async function savePlace(e) {
+    const placeData = {
       title,
       address,
       addedPhotos,
@@ -44,15 +62,28 @@ const PlacesFormPage = () => {
       checkIn,
       checkOut,
       maxGuests,
-    });
-    console.log("Succesfull added new places");
-    navigate("/account/places");
+    };
+    e.preventDefault();
+    if (id) {
+      // update
+      await axios.put("/places", {
+        id,
+        ...placeData,
+      });
+      alert("Succesfull edited a place");
+      navigate("/account/places");
+    } else {
+      // new place
+      await axios.post("/places", placeData);
+      alert("Succesfull added new places");
+      navigate("/account/places");
+    }
   }
 
   return (
     <>
       <AccountNav />
-      <form onSubmit={addNewPlace}>
+      <form onSubmit={savePlace}>
         {preInput(
           "Title",
           "title for your place. should be short and catchy as in advertisment"
