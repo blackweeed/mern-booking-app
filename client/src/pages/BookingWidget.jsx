@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
 
 const BookingWidget = ({ place }) => {
+  const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [phone, setPhone] = useState("");
   let numberOfNights = 0;
   if (checkIn && checkOut) {
     numberOfNights = differenceInCalendarDays(
@@ -14,6 +17,21 @@ const BookingWidget = ({ place }) => {
       new Date(checkIn)
     );
   }
+
+  async function bookThisPlace() {
+    const response = await axios.post("/bookings", {
+      checkIn,
+      checkOut,
+      numberOfGuests,
+      name,
+      phone,
+      place: place._id,
+      price: numberOfNights * place.price,
+    });
+    const bookingId = response.data._id;
+    navigate("/account/bookings/" + bookingId);
+  }
+
   return (
     <div className="grid grid-cols-2">
       <div>
@@ -60,8 +78,8 @@ const BookingWidget = ({ place }) => {
                     pattern="[+]{0,1}[0-9]{2}[ ]{0,1}[0-9]{3}[ ]{0,1}[0-9]{3}"
                     required
                     placeholder="788-123-123"
-                    value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   ></input>
                 </div>
               )}
@@ -69,9 +87,13 @@ const BookingWidget = ({ place }) => {
           </div>
           <div className="text-center py-2">
             <label>Number of guests</label>
-            <input type="number" value={numberOfGuests} />
+            <input
+              type="number"
+              value={numberOfGuests}
+              onChange={(e) => setNumberOfGuests(e.target.value)}
+            />
           </div>
-          <button className="primary mt-4">
+          <button onClick={bookThisPlace} className="primary mt-4">
             Book this place{" "}
             {numberOfNights > 0 && <span>${numberOfNights * place.price}</span>}
           </button>
