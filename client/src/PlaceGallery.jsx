@@ -1,7 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 
-const PlaceGallery = ({ place, imagesPath }) => {
+const PlaceGallery = ({ place }) => {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+
+  const imagesPath = "http://localhost:4000/uploads/";
+
+  if (showAllPhotos) {
+    return (
+      <div className="absolute bg-white inset-0 min-h-screen">
+        <div className="px-8 pb-8 grid gap-4">
+          <div className="fixed py-2 w-full bg-white">
+            <button
+              onClick={() => setShowAllPhotos(false)}
+              className="rounded-full p-2 bg-white hover:bg-gray-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="mt-16">
+            {" "}
+            {place?.photos?.length > 0 &&
+              place.photos.map((photo) => (
+                <div>
+                  <img src={imagesPath + photo} alt="" />
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative ">

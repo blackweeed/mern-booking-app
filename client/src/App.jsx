@@ -10,7 +10,7 @@ import PlacesPage from "./pages/PlacesPage";
 import PlacesFormPage from "./pages/PlacesFormPage";
 import BookingsPage from "./pages/BookingsPage";
 import PlacePage from "./pages/PlacePage";
-import BookingPage from "./pages/Bookingpage";
+import BookingPage from "./BookingPage";
 
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;

@@ -1,19 +1,11 @@
-import React from "react";
+import Image from "./Image.jsx";
 
-const PlaceImg = ({ place, index = 0, className }) => {
-  if (place.photos?.length) {
+export default function PlaceImg({ place, index = 0, className = null }) {
+  if (!place.photos?.length) {
     return "";
   }
-  if (!classname) {
+  if (!className) {
     className = "object-cover";
   }
-  return (
-    <img
-      className={className}
-      src={"http://localhost:4000/uploads/" + place.photos[index]}
-      alt=""
-    />
-  );
-};
-
-export default PlaceImg;
+  return <Image className={className} src={place.photos[index]} alt="" />;
+}
