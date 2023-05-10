@@ -1,9 +1,9 @@
-import AccountNav from "../AccountNav";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import PlaceImg from "../PlaceImg";
 import { Link } from "react-router-dom";
-import BookingDates from "../BookingDates";
+import axios from "axios";
+import AccountNav from "../components/AccountNav";
+import PlaceImg from "../components/PlaceImg";
+import BookingDates from "../components/BookingDates";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);

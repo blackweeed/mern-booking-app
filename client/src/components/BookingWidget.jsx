@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
 
 const BookingWidget = ({ place }) => {
   const navigate = useNavigate();
