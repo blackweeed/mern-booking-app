@@ -13,6 +13,8 @@ const ProfilePage = () => {
     subpage = "profile";
   }
 
+  console.log(user);
+
   async function logout() {
     await axios.post("/logout");
     setRedirect("/");

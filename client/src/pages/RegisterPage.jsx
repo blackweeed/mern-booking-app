@@ -5,6 +5,7 @@ import axios from "axios";
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [photo, setPhoto] = useState("");
   const [password, setPassword] = useState("");
 
   const registerUser = async (e) => {
@@ -14,6 +15,7 @@ const RegisterPage = () => {
         name,
         email,
         password,
+        photo,
       });
       alert("Regeistration succesfull");
     } catch (e) {
@@ -37,6 +39,12 @@ const RegisterPage = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Photo url - https://example.com/"
+            value={photo}
+            onChange={(e) => setPhoto(e.target.value)}
           />
           <input
             type="password"
