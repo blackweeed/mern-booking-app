@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
+const UserModel = require("./models/User");
 
 require("dotenv").config();
 const app = express();
@@ -43,11 +44,12 @@ app.get("/test", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, photo } = req.body;
   try {
     const userDoc = await User.create({
       name,
       email,
+      photo,
       password: bcrypt.hashSync(password, bcryptSalt),
     });
     res.json(userDoc);
@@ -84,8 +86,8 @@ app.get("/profile", (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, _id } = await User.findById(userData.id);
-      res.json({ name, email, _id });
+      const { name, email, _id, photo } = await User.findById(userData.id);
+      res.json({ name, email, _id, photo });
     });
   } else {
     res.json(null);
@@ -232,6 +234,15 @@ app.post("/bookings", async (req, res) => {
 app.get("/bookings", async (req, res) => {
   const userData = await getUserDataFromToken(req);
   res.json(await Booking.find({ user: userData.id }).populate("place"));
+});
+
+app.get("/users", async (req, res) => {
+  try {
+    const data = await UserModel.find();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 app.listen(4000);
