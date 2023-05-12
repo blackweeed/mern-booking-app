@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const Place = require("./models/Place");
 const Booking = require("./models/Booking");
+const Wishlist = require("./models/Wishlist");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
@@ -242,6 +243,51 @@ app.get("/users", async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+app.post("/wishlist", (req, res) => {
+  const { placeId, userId, action } = req.body;
+
+  if (action === "add") {
+    User.updateOne({ _id: userId }, { $addToSet: { wishlist: placeId } })
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.json({
+          success: false,
+          message: "Failed to add place to wishlist",
+        });
+      });
+  } else if (action === "remove") {
+    User.updateOne({ _id: userId }, { $pull: { wishlist: placeId } })
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.json({
+          success: false,
+          message: "Failed to remove place from wishlist",
+        });
+      });
+  }
+});
+
+app.get("/auth/user", (req, res) => {
+  if (req.session && req.session.user) {
+    const userId = req.session.user.id; // pobierz ID zalogowanego użytkownika z sesji
+    User.findById(userId, (err, user) => {
+      if (err) {
+        res.status(500).send("Błąd serwera.");
+      } else {
+        res.send(user); // zwróć dane użytkownika
+      }
+    });
+  } else {
+    res.status(401).send("Nieautoryzowany dostęp."); // zwróć błąd, jeśli użytkownik nie jest zalogowany
   }
 });
 
