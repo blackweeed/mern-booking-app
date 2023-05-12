@@ -1,27 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
+import logo from "../assets/images/logo.svg";
 
 const Header = () => {
+  const [toggleMenu, setToggleMenu] = useState(false);
   const { user } = useContext(UserContext);
   return (
-    <header className="flex justify-between lg:px-[10%] ">
+    <header className="flex justify-between lg:px-[7%] border-b border-gray-200 py-6">
       <Link to="/" className="flex items-center gap-1">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-8 h-8 -rotate-90"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-          />
-        </svg>
-        <span className="font-bold text-xl ">airbnc</span>
+        <img className="w-[7rem]" src={logo} alt="" />
       </Link>
       <div className="flex gap-2 border border-colo-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
         <div>Anywhere</div>
@@ -46,15 +34,15 @@ const Header = () => {
           </svg>
         </button>
       </div>
-      <Link
-        to={user ? "/account" : "/login"}
-        className="flex items-center gap-2 border border-colo-gray-300 rounded-full py-2 px-4 hover:shadow-md hover:shadow-gray-300"
+      <div
+        onClick={() => setToggleMenu((prev) => !prev)}
+        className="flex items-center gap-2 border rounded-full py-2 px-4 hover:shadow-md hover:shadow-gray-300 relative cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          strokeWidth={1.5}
+          strokeWidth={1.4}
           stroke="currentColor"
           className="w-6 h-6"
         >
@@ -64,7 +52,25 @@ const Header = () => {
             d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
           />
         </svg>
-        <div className="bg-gray-500 text-white rounded-full  border border-gray-500 overflow-hidden">
+        {toggleMenu && (
+          <div className="absolute top-14 bg-white shadow-md shadow-gray-400 w-[220px] h-fit right-0 rounded-md z-20 py-2">
+            <ul className="flex flex-col ">
+              <Link
+                to="/wishlist"
+                className="hover:bg-gray-100 px-4 py-2 cursor-pointer"
+              >
+                Wishlist
+              </Link>
+              <Link
+                to="/account"
+                className="hover:bg-gray-100 px-4 py-2 cursor-pointer"
+              >
+                Account
+              </Link>
+            </ul>
+          </div>
+        )}
+        <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
           {user?.photo ? (
             <img className="w-6 h-6 object-cover" src={user?.photo} alt="" />
           ) : (
@@ -83,7 +89,7 @@ const Header = () => {
           )}
         </div>
         {!!user && <div>{user.name}</div>}
-      </Link>
+      </div>
     </header>
   );
 };
