@@ -3,11 +3,13 @@ import React, { useState } from "react";
 const PlaceGallery = ({ place }) => {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
 
+  console.log(place.photos);
+
   const imagesPath = "http://localhost:4000/uploads/";
 
   if (showAllPhotos) {
     return (
-      <div className="absolute bg-white inset-0 min-h-screen">
+      <div className="absolute bg-white inset-0 min-h-screen ]">
         <div className="px-8 pb-8 grid gap-4">
           <div className="fixed py-2 w-full bg-white">
             <button
@@ -28,11 +30,38 @@ const PlaceGallery = ({ place }) => {
               </svg>
             </button>
           </div>
-          <div className="mt-16 ">
-            {place?.photos?.length > 0 &&
-              place.photos.map((photo) => (
-                <img className="" src={imagesPath + photo} alt="" />
-              ))}
+          <div className="flex flex-wrap justify-center mx-80 px-4 gap-2 h-[900px] mb-[50%]">
+            {place.photos.map((photo, index) => {
+              const number = 3;
+              const maxMultiple = 10;
+              const multiples = [];
+
+              for (let i = 1; i <= maxMultiple; i++) {
+                multiples.push(number * i);
+              }
+
+              if (index === 0 || multiples.includes(index)) {
+                return (
+                  <div className="w-full h-[60%]">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={imagesPath + photo}
+                      alt=""
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="w-[49.45%] ">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={imagesPath + photo}
+                      alt=""
+                    />
+                  </div>
+                );
+              }
+            })}
           </div>
         </div>
       </div>
